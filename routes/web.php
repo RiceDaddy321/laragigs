@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ListingController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
@@ -41,20 +42,39 @@ Route::get("/posts/{id}", function($id) {
 Route::get('/search', function(Request $request) {
    return "<h1>".$request->name.' '.$request->city."</h1>";     
 });
+/**
+ * Common Resource routes:
+ * index - show all  listing
+ * show - show single listing
+ * create - show form to create new listing
+ * store - store new listing
+ * edit - show form to edit listing
+ * update - update listing
+ * destory - delete listing
+ */
+
+ //adding new functionality path: route, controller method, view
 
 //important code
 //all listings
-Route::get('/', function() {
-    return view('listings', [
-        'listings' => Listing::all()
-    ]);
-});
+Route::get('/', [ListingController::class, 'index']);
 
-//single listing
-Route::get('/listings/{listing}', function(Listing $listing) {
-    return view('listing', [
-        'listing' => $listing
-    ]);
-});
-  
+//show create form
+Route::get('/listings/create', [ListingController::class, 'create']);
+
+//store listing data
+Route::post('/listings', [ListingController::class, 'store']); 
+
+//Show Edit form
+Route::get('/listings/{listing}/edit', [ListingController::class, 'edit']);
+
+// Submit to Update
+Route::put('/listings/{listing}', [ListingController::class, 'update']);
+
+//delete listing
+Route::delete('/listings/{listing}', [ListingController::class, 'destroy']);
+
+//delete listing
+Route::get('/listings/{listing}', [ListingController::class, 'show']);
+
 require __DIR__.'/auth.php';
